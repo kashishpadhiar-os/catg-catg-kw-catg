@@ -1,0 +1,20 @@
+ --extra-index-url https://asia-south1-python.pkg.dev/prj-onlinesales-prod-01/os-python-packages/simple/
+  os-svc-client-v2==3.1.12
+  boto
+  boto3
+  annoy
+  openpyxl
+  tabulate
+  humanfriendly
+  nltk
+  tensorflow==2.11.0
+  tensorflow-hub==0.16.1
+  tensorflow-text==2.11.0
+  google-genai
+  google-cloud-bigquery
+  google-cloud-secret-manager
+  db-dtypes
+  numpy
+  pandas
+  scikit-learn
+  tqdm

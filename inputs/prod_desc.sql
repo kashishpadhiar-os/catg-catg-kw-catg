@@ -1,0 +1,17 @@
+select merchandise_product_dimensions.client_id,
+lower(merchandise_product_dimensions.e_name) as e_name,
+lower(merchandise_product_dimensions.e_brand) as e_brand,
+__CATEGORY_COLUMNS__,
+SUM(os_merchandise_product_performance_facts.sok_sales_usd) as sok_sales_usd
+from reporting.oltp_merchandise_product_dimensions_{client_id} as merchandise_product_dimensions,
+reporting.os_merchandise_product_performance_facts
+where merchandise_product_dimensions.client_id = os_merchandise_product_performance_facts.client_id
+and merchandise_product_dimensions.sku_id = os_merchandise_product_performance_facts.sku_id
+and merchandise_product_dimensions.merchant_id = os_merchandise_product_performance_facts.merchant_id
+and merchandise_product_dimensions.e_currency = os_merchandise_product_performance_facts.currency
+and merchandise_product_dimensions.country_code = os_merchandise_product_performance_facts.country_code
+and os_merchandise_product_performance_facts.date >= current_date - 7
+and os_merchandise_product_performance_facts.date <= current_date - 1
+and os_merchandise_product_performance_facts.client_id = @client_id
+__EXTRA_FILTERS__
+group by 1,2,3,4,5,6,7,8,9,10,11

@@ -1,0 +1,34 @@
+select merchandise_product_dimensions.client_id,
+lower(merchandise_product_dimensions.e_name) as e_name,
+lower(merchandise_product_dimensions.e_brand) as e_brand,
+__CATEGORY_COLUMNS__,
+SUM(os_merchandise_product_performance_facts.sok_sales_usd) as sok_sales_usd
+from
+reporting.oltp_merchandise_product_dimensions_{client_id} as merchandise_product_dimensions,
+reporting.os_merchandise_product_performance_facts ,
+reporting.os_product_ads_product_selection_{client_id} as os_product_ads_product_selection,
+reporting.marketing_campaign_dimensions,
+reporting.campaign_tagging_data,
+reporting.clients
+where
+merchandise_product_dimensions.client_id = os_merchandise_product_performance_facts.client_id
+and merchandise_product_dimensions.sku_id = os_merchandise_product_performance_facts.sku_id
+and merchandise_product_dimensions.merchant_id = os_merchandise_product_performance_facts.merchant_id
+and merchandise_product_dimensions.e_currency = os_merchandise_product_performance_facts.currency
+and merchandise_product_dimensions.country_code = os_merchandise_product_performance_facts.country_code
+and merchandise_product_dimensions.client_id = os_product_ads_product_selection.client_id
+and merchandise_product_dimensions.merchant_id = os_product_ads_product_selection.merchant_id
+and merchandise_product_dimensions.sku_id = os_product_ads_product_selection.product_id
+and campaign_tagging_data.marketing_campaign_id = marketing_campaign_dimensions.marketing_campaign_id
+and campaign_tagging_data.campaign_id = os_product_ads_product_selection.campaign_id
+and merchandise_product_dimensions.merchant_id = clients.seller_id
+and os_product_ads_product_selection.merchant_id = clients.seller_id
+AND clients.client_id = os_product_ads_product_selection.merchant_client_id
+and os_merchandise_product_performance_facts.date >= current_date - 7
+and os_merchandise_product_performance_facts.date <= current_date - 1
+and os_merchandise_product_performance_facts.client_id = @client_id
+and os_product_ads_product_selection.is_active = TRUE
+and marketing_campaign_dimensions.status = 'ACTIVE'
+and clients.status = 'ACTIVE'
+__EXTRA_FILTERS__
+group by 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11;
